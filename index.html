@@ -327,6 +327,15 @@ const files = [
     date: "2026-07-16",
     href: "azeer-zid-invoice-2026-07.pdf"
   },
+  {
+    title: "إيصال شحن رصيد حملات أزير",
+    description: "إيصال دفع لشحن رصيد الحملات على منصة أزير عبر بوابة Twerlo — 215.63 ريال.",
+    category: "فواتير",
+    type: "PAGE",
+    page: "invoiceAzeerRecharge",
+    date: "2026-07-05",
+    href: "azeer-recharge-receipt.jpg"
+  },
 ];
 
 /* ---------- شاشة الدخول (حماية بسيطة من جهة العميل فقط) ---------- */
@@ -908,6 +917,39 @@ const pageRenderers = {
         </div>
 
         <div class="source-note"><a href="${f.href}" target="_blank" rel="noopener">تحميل ملف الإكسل الأصلي</a></div>
+      </div>
+    `;
+  },
+  invoiceAzeerRecharge(f){
+    return `
+      <div class="page-content">
+        <div class="invoice-top">
+          <div><b>Azeer — أزير</b><span>إيصال شحن رصيد الحملات (عبر بوابة Twerlo)</span></div>
+          <div class="invoice-no">Invoice 80334742</div>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-card"><b>215.63</b><span>قيمة الشحن (ريال)</span></div>
+          <div class="stat-card"><b>PAID</b><span>حالة الدفع</span></div>
+          <div class="stat-card"><b>05/07/2026</b><span>تاريخ العملية</span></div>
+          <div class="stat-card"><b>VISA/MASTER</b><span>وسيلة الدفع</span></div>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <tr><th>البيان</th><th>القيمة</th></tr>
+            <tr><td>رقم الفاتورة</td><td dir="ltr">80334742</td></tr>
+            <tr><td>المرجع</td><td dir="ltr">2026001187</td></tr>
+            <tr><td>رقم المعاملة (Transaction ID)</td><td dir="ltr">85459</td></tr>
+            <tr><td>رقم التفويض (Authorization ID)</td><td dir="ltr">011494</td></tr>
+            <tr><td>Track ID</td><td dir="ltr">05-07-2026_78038162</td></tr>
+            <tr><td>Reference ID</td><td dir="ltr">618618085459</td></tr>
+            <tr><td>تاريخ ووقت العملية</td><td dir="ltr">05/07/2026 21:04</td></tr>
+          </table>
+        </div>
+        <div class="two-col">
+          <div class="goal-item"><b>البند</b> Pay For Twerlo — الكمية 1</div>
+          <div class="goal-item"><b>الإجمالي</b> 215.63 ريال</div>
+        </div>
+        <a class="download-btn" href="${f.href}" download>⬇ تحميل صورة الإيصال</a>
       </div>
     `;
   }
