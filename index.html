@@ -336,6 +336,22 @@ const files = [
     date: "2026-07-05",
     href: "azeer-recharge-receipt.jpg"
   },
+  {
+    title: "شيلف توكر يوليو 2026",
+    description: "ملف تصميم بطاقات رفوف العروض — 255 عرضًا، كل عرض في صفحة A6 مستقلة، النسخة النهائية المعتمدة.",
+    category: "العروض الشهرية",
+    type: "PDF",
+    date: "2026-07-26",
+    href: "shelf-talker-july-2026-final.pdf"
+  },
+  {
+    title: "ملف أسعار عروض يوليو 2026",
+    description: "قائمة العروض والأسعار الشهرية بشيتين (السعر قبل وبعد الخصم، نسبة الخصم، تواريخ البداية والنهاية) — جاهز للرفع على زد.",
+    category: "العروض الشهرية",
+    type: "XLSX",
+    date: "2026-07-26",
+    href: "monthly-offers-prices-july-2026.xlsx"
+  },
 ];
 
 /* ---------- شاشة الدخول (حماية بسيطة من جهة العميل فقط) ---------- */
@@ -999,9 +1015,12 @@ async function openViewer(f){
       if (!res.ok) throw new Error('fetch failed');
       const buf = await res.arrayBuffer();
       const wb = XLSX.read(buf, {type: 'array'});
-      const sheet = wb.Sheets[wb.SheetNames[0]];
-      const html = XLSX.utils.sheet_to_html(sheet);
-      viewerBody.innerHTML = '<div class="xlsx-wrap">' + html + '</div>';
+      const sections = wb.SheetNames.map(name => {
+        const html = XLSX.utils.sheet_to_html(wb.Sheets[name]);
+        const label = wb.SheetNames.length > 1 ? `<h3 class="section-title">${name}</h3>` : '';
+        return label + '<div class="xlsx-wrap">' + html + '</div>';
+      });
+      viewerBody.innerHTML = '<div class="page-content">' + sections.join('') + '</div>';
     }catch(err){
       viewerBody.innerHTML = '<div class="viewer-error">تعذر عرض الملف داخل الموقع.<br><a href="'+f.href+'" target="_blank" rel="noopener">فتح الملف في تبويب جديد</a></div>';
     }
