@@ -116,6 +116,48 @@ footer{text-align:center;color:var(--ink-faint);font-size:11.5px;margin-top:34px
 .xlsx-wrap tr:first-child td{background:var(--red-soft);font-weight:700;color:var(--red-dark)}
 [data-theme="dark"] .xlsx-wrap tr:first-child td{color:var(--red)}
 
+/* ---- صفحات داخلية (تحويل المستند لداشبورد حقيقي بدل ملف خام) ---- */
+.page-content{padding:28px 26px 8px}
+.page-content .lede{text-align:center;color:var(--ink-soft);font-size:13.5px;line-height:1.85;max-width:640px;margin:0 auto 28px}
+.page-content h3.section-title{text-align:center;font-size:18px;font-weight:900;margin:38px 0 16px}
+.page-content h3.section-title:first-of-type{margin-top:0}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:22px}
+.stat-card{background:var(--surface-soft);border:1px solid var(--line);border-radius:12px;padding:16px 10px;text-align:center}
+.stat-card b{display:block;font-size:20px;color:var(--red);font-weight:900;direction:ltr}
+.stat-card span{font-size:11.5px;color:var(--ink-soft)}
+.highlight-box{background:linear-gradient(155deg,var(--red),var(--red-dark));color:#fff;border-radius:14px;padding:22px;text-align:center;margin-bottom:8px}
+.highlight-box b{display:block;font-size:28px;font-weight:900;margin:5px 0;direction:ltr}
+.highlight-box span{font-size:12.5px;opacity:.9}
+.two-col{display:grid;gap:10px;grid-template-columns:1fr}
+.goal-item{background:var(--surface-soft);border:1px solid var(--line);border-radius:10px;padding:11px 15px;font-size:13px;display:flex;gap:9px;align-items:flex-start}
+.goal-item b{color:var(--red);flex:none}
+.role-grid{display:grid;gap:12px;grid-template-columns:1fr}
+.role-card{background:var(--surface-soft);border:1px solid var(--line);border-radius:12px;padding:16px}
+.role-card h4{margin:0 0 9px;font-size:14px;color:var(--red);text-align:center}
+.role-card ul{margin:0;padding-inline-start:18px;font-size:12.5px;color:var(--ink-soft);line-height:1.85}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.bar-label{width:64px;font-size:12px;flex:none}
+.bar-track{flex:1;background:var(--surface-soft);border-radius:6px;overflow:hidden;height:24px}
+.bar-fill{background:var(--red);height:100%;border-radius:6px}
+.bar-fill.final{background:var(--red-dark)}
+.bar-value{width:74px;text-align:left;font-size:11.5px;color:var(--ink-soft);flex:none;direction:ltr}
+.kpi-grid{display:grid;gap:12px;grid-template-columns:1fr}
+.kpi-card{background:var(--surface-soft);border:1px solid var(--line);border-radius:12px;padding:15px}
+.kpi-card h4{margin:0 0 8px;font-size:13.5px;color:var(--red);text-align:center}
+.kpi-card ul{margin:0;padding-inline-start:18px;font-size:12px;color:var(--ink-soft);line-height:1.8}
+.checklist{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.checklist li{display:flex;gap:8px;font-size:13px;background:var(--surface-soft);border-radius:8px;padding:10px 14px}
+.checklist li:before{content:'✓';color:#16a34a;font-weight:900;flex:none}
+[data-theme="dark"] .checklist li:before{color:#4ade80}
+.source-note{text-align:center;margin:30px 0 6px;padding-top:16px;border-top:1px solid var(--line-soft)}
+.source-note a{color:var(--red);font-weight:700;font-size:12.5px;text-decoration:none}
+
+@media(min-width:640px){
+  .two-col{grid-template-columns:1fr 1fr}
+  .role-grid{grid-template-columns:repeat(3,1fr)}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+}
+
 @media(min-width:720px){
   .brand h1{font-size:24px}
   .grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
@@ -198,7 +240,8 @@ const files = [
     title: "الخطة التنفيذية للتسويق الإلكتروني والبيع أونلاين",
     description: "الخطة الكاملة (يوليو–ديسمبر 2026) لرفع المبيعات الشهرية من 95,000 إلى 300,000 ريال — الأهداف، الهيكل الوظيفي، المشروعات، والمؤشرات.",
     category: "استراتيجية",
-    type: "PDF",
+    type: "PAGE",
+    page: "executivePlan",
     date: "2026-07-13",
     href: "executive-plan-h2-2026.pdf"
   },
@@ -386,6 +429,131 @@ function initSlider(){
 
 searchInput.addEventListener('input', render);
 
+/* ---------- صفحات داخلية: تحويل مستند إلى داشبورد حقيقي بدل ملف خام ---------- */
+const pageRenderers = {
+  executivePlan(f){
+    return `
+      <div class="page-content">
+        <p class="lede">تهدف هذه الخطة إلى استكمال بناء منظومة التجارة الإلكترونية والبيع أونلاين في صيدليات أوبلس، وربطها بمنظومة تشغيلية وتسويقية موحدة، وصولًا إلى مبيعات شهرية قدرها 300,000 ريال بنهاية 2026.</p>
+
+        <div class="stat-grid">
+          <div class="stat-card"><b>300,000</b><span>المستهدف الشهري (ريال)</span></div>
+          <div class="stat-card"><b>95,000</b><span>المبيعات الحالية (ريال)</span></div>
+          <div class="stat-card"><b>1,140</b><span>طلب مكتمل</span></div>
+          <div class="stat-card"><b>2,050</b><span>عميل نشط (زد + واتساب)</span></div>
+        </div>
+
+        <h3 class="section-title">ما تم إنجازه حتى 13 يوليو 2026</h3>
+        <div class="stat-grid">
+          <div class="stat-card"><b>95,000</b><span>معدل المبيعات الشهري</span></div>
+          <div class="stat-card"><b>164,000</b><span>مبيعات تراكمية منذ الإطلاق</span></div>
+          <div class="stat-card"><b>800</b><span>عميل نشط على منصة زد</span></div>
+          <div class="stat-card"><b>1,250</b><span>عميل على منظومة واتساب</span></div>
+          <div class="stat-card"><b>15 / 20</b><span>صيدلية مفعّلة / مستهدفة على واتساب</span></div>
+        </div>
+
+        <h3 class="section-title">الأهداف الرئيسية للخطة</h3>
+        <div class="two-col">
+          <div class="goal-item"><b>1</b> زيادة المبيعات الشهرية من 95,000 ريال إلى 300,000 ريال</div>
+          <div class="goal-item"><b>2</b> استكمال الهيكل الوظيفي لفريق التجارة الإلكترونية</div>
+          <div class="goal-item"><b>3</b> تفعيل الباقة الاحترافية في منصة زد</div>
+          <div class="goal-item"><b>4</b> تطوير أداء مسؤول عمليات المتجر</div>
+          <div class="goal-item"><b>5</b> تحسين أداء الحملات التسويقية</div>
+          <div class="goal-item"><b>6</b> إطلاق تطبيق الموبايل على Apple App Store وGoogle Play</div>
+          <div class="goal-item"><b>7</b> تفعيل الدفع عن طريق تابي</div>
+          <div class="goal-item"><b>8</b> ربط منصة Linkit بقنوات البيع المختلفة</div>
+          <div class="goal-item"><b>9</b> دراسة مشروع جوليب وملاءمته لصيدليات أوبلس</div>
+          <div class="goal-item"><b>10</b> التوسع في التوصيل إلى الرياض ووادي الدواسر والحوطة والسليل</div>
+          <div class="goal-item"><b>11</b> الوصول إلى 20 صيدلية مفعلة على واتساب</div>
+          <div class="goal-item"><b>12</b> فصل وقياس مبيعات واتساب بصورة دقيقة</div>
+          <div class="goal-item"><b>13</b> تحسين تجربة المستخدم وزيادة معدل تكرار الشراء</div>
+          <div class="goal-item"><b>14</b> بناء تقارير تشغيلية وتسويقية ومالية واضحة للإدارة</div>
+        </div>
+
+        <h3 class="section-title">الهيكل الوظيفي والإداري</h3>
+        <div class="role-grid">
+          <div class="role-card">
+            <h4>مدير التسويق الإلكتروني والبيع أونلاين</h4>
+            <ul>
+              <li>الإشراف الكامل على منظومة التجارة الإلكترونية</li>
+              <li>التفاوض مع شركات التوصيل والمنصات الخارجية</li>
+              <li>متابعة تطبيق الموبايل والربط مع Linkit</li>
+              <li>دراسة مشروع جوليب ورفع تقارير للإدارة</li>
+              <li>الإشراف على مسؤول العمليات وأخصائي التسويق</li>
+            </ul>
+          </div>
+          <div class="role-card">
+            <h4>مسؤول عمليات المتجر الإلكتروني</h4>
+            <ul>
+              <li>صيدلانية من داخل الشركة بعد إجراء المقابلات</li>
+              <li>إضافة وتحديث المنتجات والأسعار والعروض</li>
+              <li>متابعة المخزون والمنتجات غير المتوفرة</li>
+              <li>استقبال الطلبات وتوجيهها للفروع ومتابعة تسليمها</li>
+              <li>إعداد تقارير المبيعات ومتابعة الشكاوى التشغيلية</li>
+            </ul>
+          </div>
+          <div class="role-card">
+            <h4>أخصائي التسويق — الأستاذة عائشة</h4>
+            <ul>
+              <li>متابعة الحملات التسويقية والسوشيال ميديا</li>
+              <li>التنسيق مع شركة التسويق الخارجية</li>
+              <li>استهداف عملاء جدد وحملات إعادة الاستهداف</li>
+              <li>متابعة السلات المتروكة وحملات الحفاظ على العملاء</li>
+              <li>تقارير أسبوعية وشهرية وتكلفة اكتساب العميل</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 class="section-title">المشروعات الرئيسية</h3>
+        <div class="two-col">
+          <div class="goal-item"><b>١</b> مشروع جوليب — دراسة عملية متكاملة عن مدى ملاءمته لصيدليات أوبلس</div>
+          <div class="goal-item"><b>٢</b> منصة Linkit — توحيد قنوات البيع الأونلاين تحت منصة واحدة</div>
+          <div class="goal-item"><b>٣</b> تفعيل تابي — تفعيل الدفع عن طريق تابي على المتجر الإلكتروني</div>
+          <div class="goal-item"><b>٤</b> تطبيق الموبايل — متابعة الإطلاق على App Store وGoogle Play</div>
+          <div class="goal-item"><b>٥</b> اتفاقيات التوصيل — الرياض، وادي الدواسر، الحوطة، والسليل</div>
+        </div>
+
+        <h3 class="section-title">مستهدف المبيعات الشهري (ريال)</h3>
+        <div>
+          <div class="bar-row"><span class="bar-label">الحالي</span><div class="bar-track"><div class="bar-fill" style="width:32%"></div></div><span class="bar-value">95,000</span></div>
+          <div class="bar-row"><span class="bar-label">يوليو</span><div class="bar-track"><div class="bar-fill" style="width:40%"></div></div><span class="bar-value">120,000</span></div>
+          <div class="bar-row"><span class="bar-label">أغسطس</span><div class="bar-track"><div class="bar-fill" style="width:50%"></div></div><span class="bar-value">150,000</span></div>
+          <div class="bar-row"><span class="bar-label">سبتمبر</span><div class="bar-track"><div class="bar-fill" style="width:62%"></div></div><span class="bar-value">185,000</span></div>
+          <div class="bar-row"><span class="bar-label">أكتوبر</span><div class="bar-track"><div class="bar-fill" style="width:75%"></div></div><span class="bar-value">225,000</span></div>
+          <div class="bar-row"><span class="bar-label">نوفمبر</span><div class="bar-track"><div class="bar-fill" style="width:88%"></div></div><span class="bar-value">265,000</span></div>
+          <div class="bar-row"><span class="bar-label">ديسمبر</span><div class="bar-track"><div class="bar-fill final" style="width:100%"></div></div><span class="bar-value">300,000</span></div>
+        </div>
+
+        <h3 class="section-title">مؤشرات الأداء الرئيسية</h3>
+        <div class="kpi-grid">
+          <div class="kpi-card"><h4>مؤشرات المتجر</h4><ul><li>زوار المتجر ومعدل التحويل</li><li>السلات المتروكة ونسبة استعادتها</li><li>المنتجات الأكثر مبيعًا وغير المتوفرة</li><li>معدل تكرار الشراء</li></ul></div>
+          <div class="kpi-card"><h4>مؤشرات المبيعات</h4><ul><li>إجمالي المبيعات الشهرية</li><li>عدد الطلبات ومتوسط قيمة الطلب</li><li>نسبة نمو المبيعات</li><li>المبيعات حسب القناة والفرع والمنطقة</li></ul></div>
+          <div class="kpi-card"><h4>مؤشرات التسويق</h4><ul><li>تكلفة اكتساب العميل والعائد على الإنفاق</li><li>العملاء الجدد والعائدون</li><li>أداء كل حملة ومنصة إعلانية</li><li>نسبة التفاعل</li></ul></div>
+          <div class="kpi-card"><h4>مؤشرات واتساب</h4><ul><li>عدد العملاء والمحادثات</li><li>عدد الطلبات وقيمة المبيعات</li><li>متوسط وقت الرد ومعدل التحويل</li><li>عدد الصيدليات المفعّلة</li></ul></div>
+          <div class="kpi-card"><h4>مؤشرات التطبيق</h4><ul><li>التحميلات والمستخدمون النشطون</li><li>عدد الطلبات ومعدل التحويل</li><li>تقييم التطبيق ومعدل الأعطال</li><li>معدل الاحتفاظ بالمستخدمين</li></ul></div>
+          <div class="kpi-card"><h4>مؤشرات التشغيل</h4><ul><li>متوسط زمن التجهيز والتوصيل</li><li>نسبة الطلبات الملغاة والمتأخرة</li><li>توفر المنتجات ونسبة الشكاوى</li><li>نسبة رضا العملاء</li></ul></div>
+        </div>
+
+        <h3 class="section-title">النتيجة المتوقعة بنهاية 2026</h3>
+        <ul class="checklist">
+          <li>فريق تجارة إلكترونية واضح المهام والمسؤوليات</li>
+          <li>مسؤول عمليات متجر مدرَّب وقادر على إدارة المنصة</li>
+          <li>أخصائي تسويق يتابع الحملات والعملاء بانتظام</li>
+          <li>منصة زد تعمل بالباقة الاحترافية، وتفعيل الدفع عبر تابي</li>
+          <li>تطبيق موبايل متاح على App Store وGoogle Play</li>
+          <li>ربط قنوات البيع من خلال Linkit، واكتمال دراسة جوليب</li>
+          <li>تفعيل 20 صيدلية على منظومة واتساب وقياس مبيعاته بدقة</li>
+          <li>تغطية توصيل للمناطق المستهدفة</li>
+          <li>الوصول إلى معدل مبيعات شهري أونلاين قدره 300,000 ريال</li>
+          <li>قاعدة بيانات وتقارير تساعد في إعداد خطة نمو 2027</li>
+        </ul>
+
+        <div class="source-note"><a href="${f.href}" target="_blank" rel="noopener">عرض المستند الأصلي PDF</a></div>
+      </div>
+    `;
+  }
+};
+
 /* ---------- عارض الملفات داخل الموقع (بدون تنزيل أو مغادرة الصفحة) ---------- */
 const mainContent = document.getElementById('mainContent');
 const viewer = document.getElementById('viewer');
@@ -400,7 +568,9 @@ async function openViewer(f){
   viewerBody.innerHTML = '<div class="viewer-loading">جاري تجهيز الملف…</div>';
   window.scrollTo({top: 0, behavior: 'smooth'});
 
-  if (f.type === 'XLSX'){
+  if (f.type === 'PAGE'){
+    viewerBody.innerHTML = pageRenderers[f.page] ? pageRenderers[f.page](f) : '<div class="viewer-error">الصفحة غير جاهزة بعد.</div>';
+  } else if (f.type === 'XLSX'){
     try{
       const res = await fetch(f.href);
       if (!res.ok) throw new Error('fetch failed');
